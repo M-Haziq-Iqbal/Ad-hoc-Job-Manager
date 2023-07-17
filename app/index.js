@@ -9,6 +9,13 @@ const Home = () => {
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState("")
 
+    // reroute to #searchTerm page (<Welcome/>)
+    const handleClick = () => {
+        if (searchTerm) {
+            router.push(`/search/${searchTerm}`)
+        }
+    }
+
     return(
         <SafeAreaView style={{flex: 1 ,backgroundColor: COLORS.lightWhite}}>
             <Stack.Screen 
@@ -42,11 +49,7 @@ const Home = () => {
                     <Welcome
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
-                        handleClick = {() => {
-                            if (searchTerm) {
-                                router.push(`/search/${searchTerm}`)
-                            }
-                        }}
+                        handleClick = {handleClick}
                     />
                     <Popularjobs/>
                     <Nearbyjobs/>

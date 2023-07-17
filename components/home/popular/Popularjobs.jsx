@@ -12,7 +12,8 @@ const Popularjobs = () => {
   const router = useRouter();
   const [selectedJob, setSelectedJob] = useState([])
 
-  const onPress = (item) => {
+  // reroute to #item.job_id page (<PopularJobCard/>)
+  const handlePress = (item) => {
     router.push(`/job-details/${item.job_id}`)
     setSelectedJob(item.job_id)
   }
@@ -44,7 +45,7 @@ const Popularjobs = () => {
             renderItem={({item})=>(
               <PopularJobCard 
                 item={item}
-                onPress={onPress}
+                onPress={handlePress}
                 selectedJob={selectedJob}
               />
             )}

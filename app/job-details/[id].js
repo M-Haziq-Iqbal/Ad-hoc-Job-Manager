@@ -56,7 +56,7 @@ const JobDetails = () => {
             />
             <ScrollView showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
                 {isLoading ? (
-                    <ActivityIndicator size={"large"}/>
+                    <ActivityIndicator/>
                 ) : error ? (
                     <Text>Something went wrong</Text>
                 ) : data.length === 0?(
