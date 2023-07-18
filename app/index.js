@@ -1,62 +1,31 @@
-import {useState} from 'react';
-import {View, ScrollView, SafeAreaView} from 'react-native';
-import {Stack, useRouter} from 'expo-router';
+import { useEffect} from 'react';
+import { SafeAreaView } from 'react-native';
+import { Stack, useRouter } from 'expo-router';
 
-import {COLORS, icons, images, SIZES} from '../constants';
-import {Nearbyjobs, Popularjobs, ScreenHeaderBtn, Welcome} from '../components';
+import { FIREBASE_AUTH } from '../firebase';
+import { onAuthStateChanged } from 'firebase/auth'
 
-const Home = () => {
-    const router = useRouter();
-    const [searchTerm, setSearchTerm] = useState("")
+export default function App () {
 
-    // reroute to #searchTerm page (<Welcome/>)
-    const handleClick = () => {
-        if (searchTerm) {
-            router.push(`/search/${searchTerm}`)
-        }
+    const router = useRouter()
+
+    const redirect = (user) => {
+        user ? router.replace('/home') : user ?? router.replace('/screen/login')
     }
 
-    return(
-        <SafeAreaView style={{flex: 1 ,backgroundColor: COLORS.lightWhite}}>
-            <Stack.Screen 
-                options={{
-                    headerStyle: {
-                        backgroundColor: COLORS.lightWhite,
-                    },
-                    headerTitleStyle:{
-                        display:"flex",
-                        flex:1,
-                        alignSelf:"center",
-                        textAlign:"center"
-                    },
-                    headerShadowVisible: false,
-                    headerLeft: ()=>(
-                        <ScreenHeaderBtn iconUrl={icons.menu} dimension="60%"/>
-                    ),
-                    headerRight: ()=>(
-                        <ScreenHeaderBtn iconUrl={images.profile} dimension="100%"/>
-                    ),
-                    headerTitle: "HEAD"
-                }}
-            />
-            <ScrollView>
-                <View
-                    style={{
-                        flex:1,
-                        padding:SIZES.medium
-                    }}
-                >
-                    <Welcome
-                        searchTerm={searchTerm}
-                        setSearchTerm={setSearchTerm}
-                        handleClick = {handleClick}
-                    />
-                    <Popularjobs/>
-                    <Nearbyjobs/>
-                </View>
-            </ScrollView>
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
+            console.log('user', user);
+            redirect(user)
+        });
+
+        return unsubscribe
+    }, []);
+
+    return (
+        <SafeAreaView>
+            <Stack.Screen options={{headerShown: false}}/>
         </SafeAreaView>
+        
     )
 }
-
-export default Home;

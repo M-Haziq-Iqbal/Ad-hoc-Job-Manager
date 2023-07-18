@@ -45,7 +45,7 @@ const Popularjobs = () => {
             renderItem={({item})=>(
               <PopularJobCard 
                 item={item}
-                onPress={handlePress}
+                handlePress={handlePress}
                 selectedJob={selectedJob}
               />
             )}
