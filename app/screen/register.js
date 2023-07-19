@@ -1,34 +1,44 @@
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native'
 import { Stack, useRouter } from 'expo-router';
 import { useState, useEffect } from 'react';
+import {Picker} from '@react-native-picker/picker';
 
 import { FIREBASE_AUTH } from '../../firebase';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 
 const register = () => {
 
-  const router = useRouter();
+   const router = useRouter();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  
-  const auth = FIREBASE_AUTH;
+   const [email, setEmail] = useState("");
+   const [password, setPassword] = useState("");
+   const [loading, setLoading] = useState(false);
+   const [selectedRole, setSelectedRole] = useState();
+   
+   const auth = FIREBASE_AUTH;
 
-  const signUp = async () => {
-    setLoading(true);
-    try {
-      const response = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(response);
-      alert("Register successful: ")
-      FIREBASE_AUTH.signOut()
-      router.push('/screen/login')
-    } catch (error) {
-      console.log(error);
-      alert("Register failed: " + error.message)
-    } finally {
-      setLoading(false)
-    }
+   const signUp = async () => {
+      setLoading(true);
+      try {
+         if (
+            !email? alert("Please fill the email ")
+            : !password? alert ("Please fill the password ")
+            : !selectedRole? alert("Please select role ")
+            : true
+         ) {
+            const response = await createUserWithEmailAndPassword(auth, email, password);
+            console.log(response);
+            alert("Register successful: ")
+
+            FIREBASE_AUTH.signOut()
+            router.push('/screen/login')
+         }   
+      } catch (error) {
+         console.log(error);
+         alert("Register failed: " + error.message)
+      } finally {
+         setLoading(false)
+      }
   }
 
   return (
@@ -58,6 +68,17 @@ const register = () => {
           style={styles.input}
           secureTextEntry
         />
+
+         <Picker
+         selectedValue={selectedRole}
+         onValueChange={(itemValue, itemIndex) =>
+            setSelectedRole(itemValue)
+         }
+         mode='dropdown'>
+            <Picker.Item label="Role" value="" style={{color:'#808080'}}/>
+            <Picker.Item label="Manager" value="manager" />
+            <Picker.Item label="Worker" value="worker" />
+         </Picker>
       </View>
 
       <View style={styles.buttonContainer}>
