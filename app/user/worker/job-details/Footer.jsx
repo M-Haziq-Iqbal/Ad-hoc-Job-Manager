@@ -1,6 +1,34 @@
-import { StyleSheet } from "react-native";
+import React from 'react'
+import { View, Text, TouchableOpacity, Image, Linking } from 'react-native'
 
-import { COLORS, FONT, SIZES } from "../../../constants";
+const Footer = ({url}) => {
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity style={styles.likeBtn}>
+        <Image
+          source={icons.heartOutline}
+          resizeMode='contain'
+          style={styles.likeBtnImage}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity 
+        onPress={()=>(Linking.openURL(url))} 
+        style={styles.applyBtn}
+      >
+        <Text style={styles.applyBtnText}>
+          APPLY
+        </Text>
+      </TouchableOpacity>
+    </View>
+  )
+}
+
+export default Footer
+
+//Stylesheet
+import { StyleSheet } from "react-native";
+import { COLORS, FONT, SIZES, icons } from "../../../../constants";
 
 const styles = StyleSheet.create({
   container: {
@@ -43,5 +71,3 @@ const styles = StyleSheet.create({
     fontFamily: FONT.bold,
   },
 });
-
-export default styles;

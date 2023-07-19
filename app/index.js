@@ -10,7 +10,7 @@ export default function App () {
     const router = useRouter()
 
     const redirect = (user) => {
-        user ? router.replace('/home') : user ?? router.replace('/screen/login')
+        user ? router.replace('/user/worker/home') : user ?? router.replace('/screen/login')
     }
 
     useEffect(() => {

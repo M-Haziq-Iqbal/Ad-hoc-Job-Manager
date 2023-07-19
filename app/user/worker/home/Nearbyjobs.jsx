@@ -1,10 +1,8 @@
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
 import { useRouter } from 'expo-router'
 
-import styles from './nearbyjobs.style'
-import { COLORS, SIZES } from '../../../constants'
-import NearbyJobCard from '../../common/cards/nearby/NearbyJobCard'
-import useFetch from '../../../hook/useFetch'
+import NearbyJobCard from './NearbyJobCard'
+import useFetch from '../../../../hook/useFetch'
 
 const NearbyJobs = () => {
 
@@ -36,7 +34,7 @@ const NearbyJobs = () => {
             <NearbyJobCard 
               job={job} 
               key={`nearby-job-${job?.job_id}`}
-              handleNavigate = {() => router.push(`/job-details/${job.job_id}`)}
+              handleNavigate = {() => router.push(`/user/worker/job-details/${job.job_id}`)}
             />
           ))
         )}
@@ -46,3 +44,32 @@ const NearbyJobs = () => {
 }
 
 export default NearbyJobs
+
+import { StyleSheet } from "react-native";
+import { COLORS, FONT, SIZES } from "../../../../constants";
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: SIZES.xLarge,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: SIZES.small,
+  },
+  headerTitle: {
+    fontSize: SIZES.large,
+    fontFamily: FONT.medium,
+    color: COLORS.primary,
+  },
+  headerBtn: {
+    fontSize: SIZES.medium,
+    fontFamily: FONT.medium,
+    color: COLORS.gray,
+  },
+  cardsContainer: {
+    marginTop: SIZES.medium,
+    gap: SIZES.small,
+  },
+});

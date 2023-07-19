@@ -3,7 +3,7 @@ import {View, ScrollView, SafeAreaView, Pressable, Text} from 'react-native';
 import {Stack, useRouter} from 'expo-router';
 
 import {COLORS, icons, images, SIZES} from '../constants';
-import {Nearbyjobs, Popularjobs, ScreenHeaderBtn, Welcome} from '../components';
+import {Nearbyjobs, Popularjobs, ScreenHeaderBtn, Welcome} from './user';
 
 import { FIREBASE_AUTH } from '../firebase';
 
