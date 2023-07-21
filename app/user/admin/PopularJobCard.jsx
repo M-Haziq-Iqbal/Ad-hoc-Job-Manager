@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native'
-import { COLORS, FONT, SHADOWS, SIZES } from '../../../../constants';
-import { checkImageURL } from '../../../../utils';
+import { COLORS, FONT, SHADOWS, SIZES } from '../../../constants';
+import { checkImageURL } from '../../../utils';
 
 const PopularJobCard = ({ item, handlePress, selectedJob }) => {
   return (

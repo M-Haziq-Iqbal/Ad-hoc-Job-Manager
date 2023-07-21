@@ -1,32 +1,25 @@
 import { useState } from 'react'
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { useRouter } from 'expo-router'
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native'
 
-import PopularJobCard from './PopularJobCard'
-import useFetch from '../../../../hook/useFetch'
+//MAKE SURE TO IMPORT FRAGMENT PROPERLY IN BRACKET!!!
+import { WorkerCard } from '../index'
 
-const Popularjobs = () => {
+const Worker = ({data, isLoading, error, refetch}) => {
 
   const router = useRouter();
   const [selectedJob, setSelectedJob] = useState([])
 
   // reroute to #item.job_id page (<PopularJobCard/>)
   const handlePress = (item) => {
-    router.push(`/user/worker/job-details/${item.job_id}`)
+    // router.push(`/user/worker/job-details/${item.job_id}`)
     setSelectedJob(item.job_id)
   }
   
-  const { data, isLoading, error } = useFetch(
-    'search', {
-      query: 'React developer',
-      num_pages: 1
-    }
-  )
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Popular Jobs</Text>
+        <Text style={styles.headerTitle}>Available Workers</Text>
         <TouchableOpacity>
             <Text style={styles.headerBtn}> Show All </Text> 
         </TouchableOpacity>
@@ -41,11 +34,13 @@ const Popularjobs = () => {
           <FlatList
             data={data}
             renderItem={({item})=>(
-              <PopularJobCard 
+              <WorkerCard 
                 item={item}
                 handlePress={handlePress}
                 selectedJob={selectedJob}
+
               />
+              // <Text>{item.job_id}</Text>
             )}
             horizontal
             keyExtractor={item => item.job_id}
@@ -57,7 +52,7 @@ const Popularjobs = () => {
   )
 }
 
-export default Popularjobs
+export default Worker
 
 //Stylesheet
 import { StyleSheet } from 'react-native'

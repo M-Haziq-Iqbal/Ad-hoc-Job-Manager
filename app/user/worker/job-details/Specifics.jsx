@@ -1,13 +1,28 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 
-const ContentList = ({point, activeTab}) => {
+const ContentList = ({data, object, point, activeTab}) => {
+
+  // // List of properties to keep
+  const propertiesToKeep = ["job_country", "job_description", "job_employment_type", "job_title" ]
+
+  // Create a new object with only the selected properties
+  const filteredObject = Object.fromEntries(
+    Object.entries(object[0]).filter(([key]) =>
+      propertiesToKeep.includes(key)
+    )
+  );
+  
+  const value = Object.values(filteredObject)
+
+  console.log(object[0])
+  
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{activeTab}:</Text>
+      <Text style={styles.title}>{activeTab} Details:</Text>
 
       <View style={styles.pointsContainer}>
-        {point.map((details, index) => (
+        {value.map((details, index) => (
           <View key={details + index} style={styles.pointWrapper}>
             <View style={styles.pointDot}/>
             <Text style={styles.pointText}> {details}</Text>
@@ -18,28 +33,25 @@ const ContentList = ({point, activeTab}) => {
   )
 }
 
-const Specifics = ({data, activeTab}) => {
-  switch (activeTab) {
-    case "Qualifications": return (
-      <ContentList 
-        activeTab={activeTab}
-        point={data[0].job_highlights?.Qualifications??['N/A']}
-      />
-    )
-    case "Responsibilities": return (
-      <ContentList 
-        activeTab={activeTab}
-        point={data[0].job_highlights?.Responsibilities??['N/A']}
-      />
-    )
-    case "About": return (
-      <View style={styles.container}>
-        <Text style={styles.headText}> About the job: </Text>
+const Specifics = ({data, object, activeTab}) => {
 
-        <View style={styles.contentBox}>
-          <Text style={styles.contextText}>{data[0].job_description??['N/A']}</Text>
-        </View>
-      </View>
+  switch (activeTab) {
+    case "Worker": return (
+      <ContentList
+        object={object}
+        activeTab={activeTab}
+        // point={object[0].job_description??['N/A']}
+        data={data}
+      />
+    )
+
+    case "Job": return (
+      <ContentList 
+        object={object}
+        activeTab={activeTab}
+        // point={data[0].job_description??['N/A']}
+        data={data}
+      />
     )
     default: break;
   }

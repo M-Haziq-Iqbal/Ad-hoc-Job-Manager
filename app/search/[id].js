@@ -3,7 +3,7 @@ import { SafeAreaView, ActivityIndicator, View, Text, FlatList, TouchableOpacity
 import { Stack, useRouter, useSearchParams } from "expo-router";
 
 import useFetch from "../../hook/useFetch";
-import { ScreenHeaderBtn, NearbyJobCard } from "../user";
+import { ScreenHeaderBtn, NearbyJobCard } from "../user/worker";
 import { COLORS, FONT, SIZES, icons } from "../../constants";
 
 const JobSearch = () => {

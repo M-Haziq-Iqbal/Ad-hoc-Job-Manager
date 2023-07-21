@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import {Picker} from '@react-native-picker/picker';
 
 import { FIREBASE_AUTH } from '../../firebase';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
 
 const register = () => {
 
@@ -15,7 +15,7 @@ const register = () => {
    const [loading, setLoading] = useState(false);
    const [selectedRole, setSelectedRole] = useState();
    
-   const auth = FIREBASE_AUTH;
+  //  const auth = FIREBASE_AUTH;
 
    const signUp = async () => {
       setLoading(true);
@@ -26,8 +26,7 @@ const register = () => {
             : !selectedRole? alert("Please select role ")
             : true
          ) {
-            const response = await createUserWithEmailAndPassword(auth, email, password);
-            console.log(response);
+            await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password)
             alert("Register successful: ")
 
             FIREBASE_AUTH.signOut()
@@ -65,6 +64,14 @@ const register = () => {
           placeholder='Password'
           value={password}
           onChangeText={(text) => {setPassword(text)}}
+          style={styles.input}
+          secureTextEntry
+        />
+
+        <TextInput
+          placeholder='Confirm Password'
+          value={password}
+          // onChangeText={(text) => {setPassword(text)}}
           style={styles.input}
           secureTextEntry
         />

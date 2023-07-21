@@ -2,8 +2,8 @@ import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View, TouchableOpaci
 import { Stack, useRouter } from 'expo-router';
 import { useState } from 'react';
 
-import { FIREBASE_AUTH } from '../../firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { FIREBASE_AUTH, FIREBASE_AUTH_GOOGLE } from '../../firebase';
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 
 const login = () => {
 
@@ -12,14 +12,26 @@ const login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  
-  const auth = FIREBASE_AUTH;
+  const [role, setRole] = useState("")
 
   const signIn = async () => {
     setLoading(true);
     try {
-      const response = await signInWithEmailAndPassword(auth, email, password);
-      console.log(response);
+      await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
+      alert("Sign in successful: ")
+      router.push('/screen/login')
+    } catch (error) {
+      console.log(error);
+      alert("Sign in failed: " + error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const signInWithGoogle = async () => {
+    setLoading(true);
+    try {
+      await signInWithPopup(FIREBASE_AUTH, FIREBASE_AUTH_GOOGLE);
       alert("Sign in successful: ")
     } catch (error) {
       console.log(error);
@@ -28,6 +40,12 @@ const login = () => {
       setLoading(false)
     }
   }
+
+  const enter = (role) => {
+      setRole(role)
+      router.push(`/user/${role}/home/home`)
+  }
+  console.log("user: " + FIREBASE_AUTH?.currentUser?.email)
 
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -41,6 +59,13 @@ const login = () => {
         }}
       />
 
+      <TouchableOpacity
+          onPress={signInWithGoogle}
+          style={styles.input}
+        >
+          <Text> Sign In With Google </Text>
+        </TouchableOpacity>
+        
       <View style={styles.inputContainer}>
         <TextInput
           placeholder='Email'
@@ -74,8 +99,12 @@ const login = () => {
             <Text style={styles.buttonOutlineText}>REGISTER</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={()=>{router.push('/home')}}>
-            <Text>Enter</Text>
+        <TouchableOpacity onPress={()=>enter("worker")}>
+            <Text>Worker</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={()=>enter("employer")}>
+            <Text>Employer</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>    

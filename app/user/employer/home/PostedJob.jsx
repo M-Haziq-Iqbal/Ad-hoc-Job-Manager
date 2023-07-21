@@ -1,20 +1,18 @@
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
-import { useRouter } from 'expo-router'
-
-import NearbyJobCard  from './NearbyJobCard'
+import { useRouter, useState } from 'expo-router'
 import { FirestoreDataFetch } from '..'
+import PostedJobCard  from './PostedJobCard'
 
-const NearbyJobs = () => {
+const PostedJob = () => {
 
   const router = useRouter();
-
-  //call custom hooks fetching Firebase data
+  
   const { data, isLoading, error } = FirestoreDataFetch("jobDetail")
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Available Jobs</Text>
+        <Text style={styles.headerTitle}>Posted Jobs</Text>
         <TouchableOpacity>
             <Text style={styles.headerBtn}> Show All </Text> 
         </TouchableOpacity>
@@ -26,20 +24,31 @@ const NearbyJobs = () => {
         ) : error ? (
           <Text>Something went wrong</Text>
         ) : (
-          data?.map((data) => (
-            <NearbyJobCard 
-              job={data} 
-              key={`nearby-job-${data?.job_id}`}
-              handleNavigate = {() => router.push(`/user/worker/job-details/${data.job_id}`)}
+          data?.map((job) => (
+            <PostedJobCard 
+              job={job} 
+              key={`posted-job-${job?.job_id}`}
+              handleNavigate = {() => router.push(`/user/employer/job-details/${job.job_id}`)}
             />
           ))
         )}
+      </View>
+
+      <View style={styles.containerBtn}>
+          <TouchableOpacity 
+              onPress={()=>router.push("../createJob")} 
+              style={styles.applyBtn}
+          >
+              <Text style={styles.applyBtnText}>
+              +
+              </Text>
+          </TouchableOpacity>
       </View>
     </View>
   )
 }
 
-export default NearbyJobs
+export default PostedJob
 
 import { StyleSheet } from "react-native";
 import { COLORS, FONT, SIZES } from "../../../../constants";
@@ -68,4 +77,26 @@ const styles = StyleSheet.create({
     marginTop: SIZES.medium,
     gap: SIZES.small,
   },
+  containerBtn: {
+    position: "relative",
+    bottom: 0,
+    left: 10,
+    right: 0,
+    padding: SIZES.small,
+    justifyContent: "flex-end",
+    flexDirection: "row",
+    },
+  applyBtn: {
+    width: 50,                                               
+    height: 50,
+    backgroundColor: "#FE7654",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: SIZES.medium,
+  },
+  applyBtnText: {
+    fontSize: SIZES.xxLarge,
+    color: COLORS.white,
+    fontFamily: FONT.bold,
+},
 });

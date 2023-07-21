@@ -1,9 +1,9 @@
-import {useState} from 'react';
-import {View, ScrollView, SafeAreaView, Pressable, Text} from 'react-native';
-import {Stack, useRouter} from 'expo-router';
+import { useState } from 'react';
+import { View, ScrollView, SafeAreaView, Pressable, Text } from 'react-native';
+import { Stack, useRouter } from 'expo-router';
 
-import {COLORS, icons, images, SIZES} from '../../../../constants';
-import { Nearbyjobs, Popularjobs, ScreenHeaderBtn, Welcome} from '../..';
+import { COLORS, icons, images, SIZES } from '../../../../constants';
+import { Nearbyjobs, ScreenHeaderBtn, Welcome } from '..';
 
 import { FIREBASE_AUTH } from '../../../../firebase';
 
@@ -33,7 +33,7 @@ const Home = () => {
         } finally {
           setLoading(false)
         }
-      }
+    }
 
     return(
         <SafeAreaView style={{flex: 1 ,backgroundColor: COLORS.lightWhite}}>
@@ -53,7 +53,7 @@ const Home = () => {
                         <ScreenHeaderBtn iconUrl={icons.menu} dimension="60%" handlePress={()=>router.push(`/screen/login`)}/>
                     ),
                     headerRight: ()=>(
-                        <ScreenHeaderBtn iconUrl={images.profile} dimension="100%" handlePress={signOut}/>
+                        <ScreenHeaderBtn iconUrl={images.profile} dimension="100%" handlePress={()=>router.push(signOut)}/>
                     ),  
                     headerTitle: 'HOME'
                 }}
@@ -71,7 +71,6 @@ const Home = () => {
                         handleClick = {handleClick}
                         user={FIREBASE_AUTH.currentUser?.email}
                     />
-                    <Popularjobs/>
                     <Nearbyjobs/>
                 </View>
             </ScrollView>

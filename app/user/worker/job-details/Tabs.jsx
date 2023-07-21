@@ -9,7 +9,7 @@ const TabButton = ({name, activeTab, setActiveTab}) => (
   </TouchableOpacity>
 )
 
-const Tabs = ({data, tabs, activeTab, setActiveTab}) => {
+const Tabs = ({tabs, activeTab, setActiveTab}) => {
   
   return (
     <View style={styles.container}>
@@ -39,15 +39,16 @@ import { COLORS, SHADOWS, SIZES } from "../../../../constants";
 
 const styles = StyleSheet.create({
   container: {
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: SIZES.small,
     marginBottom: SIZES.small / 2,
   },
   btn: (name, activeTab) => ({
     paddingVertical: SIZES.medium,
-    paddingHorizontal: SIZES.xLarge,
+    paddingHorizontal: SIZES.xxLarge,
     backgroundColor: name === activeTab ? COLORS.primary : COLORS.white,
     borderRadius: SIZES.medium,
-    marginLeft: 2,
     ...SHADOWS.medium,
     shadowColor: COLORS.white,
   }),
