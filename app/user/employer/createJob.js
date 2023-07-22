@@ -35,7 +35,6 @@ const createJob = () => {
           job_country: values.job_country,
           job_description: values.job_description,
           job_employment_type: values.job_employment_type,
-          job_id: Date.now(),
           job_title: values.job_title
         });
         router.push('/user/employer/home/home')

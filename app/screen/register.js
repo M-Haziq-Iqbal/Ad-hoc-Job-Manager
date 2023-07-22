@@ -3,42 +3,73 @@ import { Stack, useRouter } from 'expo-router';
 import { useState, useEffect } from 'react';
 import {Picker} from '@react-native-picker/picker';
 
-import { FIREBASE_AUTH } from '../../firebase';
+import { addDoc, collection } from "firebase/firestore";
+import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { Formik } from 'formik';
 
 const register = () => {
 
    const router = useRouter();
+   
+   const dataCollectionRef = collection(FIRESTORE_DB, "employer")
 
-   const [email, setEmail] = useState("");
-   const [password, setPassword] = useState("");
    const [loading, setLoading] = useState(false);
    const [selectedRole, setSelectedRole] = useState();
    
   //  const auth = FIREBASE_AUTH;
 
-   const signUp = async () => {
-      setLoading(true);
-      try {
-         if (
-            !email? alert("Please fill the email ")
-            : !password? alert ("Please fill the password ")
-            : !selectedRole? alert("Please select role ")
-            : true
-         ) {
-            await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password)
-            alert("Register successful: ")
+  const createData = async (values) => {
+    setLoading(true);
+    try {
+      if (
+        !values.email? alert("Please fill the email ")
+        : !values.password? alert ("Please fill the password ")
+        // : !selectedRole? alert("Please select role ")
+        : true
+      ) {
 
-            FIREBASE_AUTH.signOut()
-            router.push('/screen/login')
-         }   
-      } catch (error) {
-         console.log(error);
-         alert("Register failed: " + error.message)
-      } finally {
-         setLoading(false)
+        await createUserWithEmailAndPassword(FIREBASE_AUTH, values.email, values.password)
+        alert("Register successful: ")
+
+        await addDoc(dataCollectionRef, {
+          employer_email: FIREBASE_AUTH.currentUser.email,
+        });
+          
+        FIREBASE_AUTH.signOut()
+        router.push('/screen/login')
+        // console.log(filteredData)
+        // console.log("hi")
       }
+    }catch (error){
+      alert("Ehe Register failed: " + error.message)
+    }finally {
+      setLoading(false)
+    }
   }
+
+  // const signUp = async () => {
+  //   setLoading(true);
+  //   try {
+  //       if (
+  //         !email? alert("Please fill the email ")
+  //         : !password? alert ("Please fill the password ")
+  //         // : !selectedRole? alert("Please select role ")
+  //         : true
+  //       ) {
+  //         await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password)
+  //         alert("Register successful: ")
+          
+  //         FIREBASE_AUTH.signOut()
+  //         router.push('/screen/login')
+  //       }   
+  //   } catch (error) {
+  //       console.log(error);
+  //       alert("Register failed: " + error.message)
+  //   } finally {
+  //       setLoading(false)
+  //   }
+  // }
 
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -48,54 +79,62 @@ const register = () => {
         options={{
             headerShadowVisible: false,
             headerShown: false,
-            headerTitle: 'LOGIN'
+            headerTitle: 'REGISTER'
         }}
       />
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder='Email'
-          value={email}
-          onChangeText={(text) => {setEmail(text)}}
-          style={styles.input}
-        />
+      <Formik 
+          initialValues={{
+              employer_email: "",
+          }}
+          // validationSchema={SignupSchema}
+          onSubmit={createData}
+      >
+          {({values, error, touched, handleChange, setFieldTouched, isValid, handleSubmit}) => (
+          <View style={styles.container}>
+            <View style={styles.inputContainer}>
+              <TextInput
+                  style={styles.input}
+                  placeholder='Email'
+                  value={values.email}
+                  onChangeText={handleChange('email')}
+              />
+  
+              <TextInput
+                  style={styles.input}
+                  placeholder='Password'
+                  value={values.password}
+                  onChangeText={handleChange('password')}
+                  secureTextEntry
+              />
+              </View>
 
-        <TextInput
-          placeholder='Password'
-          value={password}
-          onChangeText={(text) => {setPassword(text)}}
-          style={styles.input}
-          secureTextEntry
-        />
-
-        <TextInput
-          placeholder='Confirm Password'
-          value={password}
-          // onChangeText={(text) => {setPassword(text)}}
-          style={styles.input}
-          secureTextEntry
-        />
-
-         <Picker
-         selectedValue={selectedRole}
-         onValueChange={(itemValue, itemIndex) =>
-            setSelectedRole(itemValue)
-         }
-         mode='dropdown'>
-            <Picker.Item label="Role" value="" style={{color:'#808080'}}/>
-            <Picker.Item label="Manager" value="manager" />
-            <Picker.Item label="Worker" value="worker" />
-         </Picker>
-      </View>
+              {/* <Picker
+                selectedValue={selectedRole}
+                onValueChange={(itemValue, itemIndex) =>
+                  setSelectedRole(itemValue)
+                }
+                mode='dropdown'
+              >
+                <Picker.Item label="Role" value="" style={{color:'#808080'}}/>
+                <Picker.Item label="Manager" value="manager" />
+                <Picker.Item label="Worker" value="worker" />
+              </Picker> */}
+  
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                    onPress={handleSubmit}
+                    style={[styles.button, styles.buttonOutline]}
+                >
+                    <Text style={styles.buttonOutlineText}>REGISTER</Text>
+                </TouchableOpacity>
+            </View>
+          </View>
+          )}
+  
+      </Formik>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={signUp}
-          style={[styles.button, styles.buttonOutline]}
-        >
-            <Text style={styles.buttonOutlineText}>REGISTER</Text>
-        </TouchableOpacity>
-
         <TouchableOpacity onPress={()=>{router.back()}}>
             <Text>Back</Text>
         </TouchableOpacity>

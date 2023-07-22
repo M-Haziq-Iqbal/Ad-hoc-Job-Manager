@@ -19,7 +19,7 @@ const login = () => {
     try {
       await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
       alert("Sign in successful: ")
-      router.push('/screen/login')
+      router.push('/user/employer/home/home')
     } catch (error) {
       console.log(error);
       alert("Sign in failed: " + error.message)
@@ -45,7 +45,7 @@ const login = () => {
       setRole(role)
       router.push(`/user/${role}/home/home`)
   }
-  console.log("user: " + FIREBASE_AUTH?.currentUser?.email)
+  // console.log("user: " + FIREBASE_AUTH?.currentUser?.email)
 
   return (
     <KeyboardAvoidingView style={styles.container}>

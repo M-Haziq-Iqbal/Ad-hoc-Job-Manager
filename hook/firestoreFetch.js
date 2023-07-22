@@ -10,7 +10,7 @@ const firestoreFetch = (endpoint, query) => {
 
    const dataCollectionRef = collection(FIRESTORE_DB, endpoint)
    
-   // console.log(data)
+   // console.log(object)
 
    const fetchData = async () => {
       setIsLoading(true);
@@ -19,10 +19,11 @@ const firestoreFetch = (endpoint, query) => {
       try {
          const data = await getDocs(dataCollectionRef);
          const filteredData = data.docs.map((doc)=>({...doc.data(), id: doc.id }))
-         const filteredObjects = filteredData.filter((obj) => obj.job_id == query);
+         const filteredObjects = filteredData.filter((obj) => obj.employer_email == query || obj.id == query)
+         const filteredObjectsFinal = filteredObjects[0] //cannot access property from nested data structure e.g. object[0].id directly
 
          setData(filteredData);
-         setObject(filteredObjects);
+         setObject(filteredObjectsFinal);
          setIsLoading(false)
          
       }catch (error){
@@ -42,7 +43,7 @@ const firestoreFetch = (endpoint, query) => {
       fetchData();
    }
    
-   return { data, object, isLoading, error, refetch };
+   return { dataCollectionRef, data, object, isLoading, error, refetch };
 }
 
 export default firestoreFetch;

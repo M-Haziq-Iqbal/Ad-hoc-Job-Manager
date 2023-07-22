@@ -8,14 +8,15 @@ const ContentList = ({data, object, point, activeTab}) => {
 
   // Create a new object with only the selected properties
   const filteredObject = Object.fromEntries(
-    Object.entries(object[0]).filter(([key]) =>
+    Object.entries(object).filter(([key]) =>
       propertiesToKeep.includes(key)
     )
   );
   
   const value = Object.values(filteredObject)
 
-  console.log(object[0])
+  // console.log(object[0])
+  //{"employer_id": "", "id": "4qiY8MH6REvRcPp4zetl", "job_country": "Malay", "job_description": "description", "job_employment_type": "parttime", "job_id": "4qiY8MH6REvRcPp4zetl", "job_title": "Farming"}
   
   return (
     <View style={styles.container}>

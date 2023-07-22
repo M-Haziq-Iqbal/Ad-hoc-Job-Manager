@@ -28,7 +28,7 @@ const PostedJob = () => {
             <PostedJobCard 
               job={job} 
               key={`posted-job-${job?.job_id}`}
-              handleNavigate = {() => router.push(`/user/employer/job-details/${job.job_id}`)}
+              handleNavigate = {() => router.push(`/user/employer/job-details/${job.id}`)}
             />
           ))
         )}

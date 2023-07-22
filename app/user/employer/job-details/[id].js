@@ -17,6 +17,7 @@ const JobDetails = () => {
 
     const { data, object, isLoading, error, refetch } = FirestoreDataFetch("jobDetail", id)
     // console.log("id: " + id)
+    // console.log(object)
 
     const [activeTab, setActiveTab] = useState(tabs[0])
     const [refreshing, setRefreshing] = useState(false);

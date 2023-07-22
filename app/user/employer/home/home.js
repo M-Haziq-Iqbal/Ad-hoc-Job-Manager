@@ -3,13 +3,18 @@ import {View, ScrollView, SafeAreaView, TouchableOpacity, Text} from 'react-nati
 import {Stack, useRouter} from 'expo-router';
 import { images } from '../../../../constants';
 
+import { FirestoreDataFetch } from '..';
 import { ScreenHeaderBtn } from '../../worker';
 import { FIREBASE_AUTH } from '../../../../firebase';
 import { PostedJob, Footer, Welcome} from '../'
 
 const Home = () => {
-    const router = useRouter();
 
+    const { data, object, isLoading, error, refetch } = FirestoreDataFetch("employer", FIREBASE_AUTH.currentUser.email)
+    // console.log(object.employer_email)
+
+    const router = useRouter();
+    
     const [searchTerm, setSearchTerm] = useState("")
     const [loading, setLoading] = useState(false)
 
@@ -53,7 +58,11 @@ const Home = () => {
                         <ScreenHeaderBtn iconUrl={icons.menu} dimension="60%" handlePress={()=>router.push(`/screen/login`)}/>
                     ),
                     headerRight: ()=>(
-                        <ScreenHeaderBtn iconUrl={images.profile} dimension="100%" handlePress={()=>router.push(`/screen/login`)}/>
+                        <ScreenHeaderBtn iconUrl={images.profile} dimension="100%" 
+                        handlePress={()=>{
+                            FIREBASE_AUTH.currentUser? router.push(`/user/employer/profile-details/${object.id}`)
+                            : router.push(`/screen/login`)
+                        }}/>
                     ),  
                     headerTitle: 'HOME'
                 }}
