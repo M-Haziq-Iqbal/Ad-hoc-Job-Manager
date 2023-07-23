@@ -3,11 +3,16 @@ import { View, ScrollView, SafeAreaView, Pressable, Text } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 
 import { COLORS, icons, images, SIZES } from '../../../../constants';
-import { Nearbyjobs, ScreenHeaderBtn, Welcome } from '..';
+import { AvailableJob, ScreenHeaderBtn, Welcome } from '..';
 
+import { FirestoreDataFetch } from '..';
 import { FIREBASE_AUTH } from '../../../../firebase';
 
 const Home = () => {
+    
+    //fetch document from "worker" collection that has the current email
+    const { data, object, isLoading, error, refetch } = FirestoreDataFetch("worker", FIREBASE_AUTH.currentUser?.email)
+
     const router = useRouter();
 
     const [searchTerm, setSearchTerm] = useState("")
@@ -17,21 +22,6 @@ const Home = () => {
     const handleClick = () => {
         if (searchTerm) {
             router.push(`/search/${searchTerm}`)
-        }
-    }
-
-    const signOut = async () => {
-        setLoading(true);
-        try {
-          const response = await FIREBASE_AUTH.signOut();
-          console.log(response);
-          alert("Sign out successful: ")
-          router.push('/screen/login')
-        } catch (error) {
-          console.log(error);
-          alert("Sign out failed: " + error.message)
-        } finally {
-          setLoading(false)
         }
     }
 
@@ -53,7 +43,11 @@ const Home = () => {
                         <ScreenHeaderBtn iconUrl={icons.menu} dimension="60%" handlePress={()=>router.push(`/screen/login`)}/>
                     ),
                     headerRight: ()=>(
-                        <ScreenHeaderBtn iconUrl={images.profile} dimension="100%" handlePress={()=>router.push(signOut)}/>
+                        <ScreenHeaderBtn iconUrl={images.profile} dimension="100%" 
+                        handlePress={()=>{
+                            FIREBASE_AUTH.currentUser? router.push(`/user/worker/profile-details/${object?.id}`)
+                            : router.push(`/screen/login`)
+                        }}/>
                     ),  
                     headerTitle: 'HOME'
                 }}
@@ -71,7 +65,7 @@ const Home = () => {
                         handleClick = {handleClick}
                         user={FIREBASE_AUTH.currentUser?.email}
                     />
-                    <Nearbyjobs/>
+                    <AvailableJob/>
                 </View>
             </ScrollView>
         </SafeAreaView>

@@ -1,16 +1,17 @@
-import {useState} from 'react';
-import {View, ScrollView, SafeAreaView, TouchableOpacity, Text} from 'react-native';
-import {Stack, useRouter} from 'expo-router';
+import { useState } from 'react';
+import { View, ScrollView, SafeAreaView, TouchableOpacity, Text } from 'react-native';
+import { Stack, useRouter } from 'expo-router';
 import { images } from '../../../../constants';
 
-import { FirestoreDataFetch } from '..';
 import { ScreenHeaderBtn } from '../../worker';
-import { FIREBASE_AUTH } from '../../../../firebase';
 import { PostedJob, Footer, Welcome} from '../'
+
+import { FirestoreDataFetch } from '..';
+import { FIREBASE_AUTH } from '../../../../firebase';
 
 const Home = () => {
 
-    const { data, object, isLoading, error, refetch } = FirestoreDataFetch("employer", FIREBASE_AUTH.currentUser.email)
+    const { data, object, isLoading, error, refetch } = FirestoreDataFetch("employer", FIREBASE_AUTH.currentUser?.email)
     // console.log(object.employer_email)
 
     const router = useRouter();
@@ -60,7 +61,7 @@ const Home = () => {
                     headerRight: ()=>(
                         <ScreenHeaderBtn iconUrl={images.profile} dimension="100%" 
                         handlePress={()=>{
-                            FIREBASE_AUTH.currentUser? router.push(`/user/employer/profile-details/${object.id}`)
+                            FIREBASE_AUTH.currentUser? router.push(`/user/employer/profile-details/${object?.id}`)
                             : router.push(`/screen/login`)
                         }}/>
                     ),  

@@ -1,15 +1,25 @@
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
 import { useRouter } from 'expo-router'
+import { useEffect } from 'react'
+import { useIsFocused } from '@react-navigation/native'
 
-import NearbyJobCard  from './NearbyJobCard'
+import AvailableJobCard  from './AvailableJobCard'
 import { FirestoreDataFetch } from '..'
 
-const NearbyJobs = () => {
+const AvailableJob = () => {
 
   const router = useRouter();
+  const isFocused = useIsFocused();
 
   //call custom hooks fetching Firebase data
-  const { data, isLoading, error } = FirestoreDataFetch("jobDetail")
+  const { data, objectArray, isLoading, error, refetch } = FirestoreDataFetch("jobDetail")
+
+  //refetch jobDetail data after redirect from another page
+  useEffect(() => {
+    if(isFocused){
+      refetch();
+    }
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>
@@ -26,11 +36,11 @@ const NearbyJobs = () => {
         ) : error ? (
           <Text>Something went wrong</Text>
         ) : (
-          data?.map((data) => (
-            <NearbyJobCard 
-              job={data} 
-              key={`nearby-job-${data?.job_id}`}
-              handleNavigate = {() => router.push(`/user/worker/job-details/${data.job_id}`)}
+          data?.map((job) => (
+            <AvailableJobCard 
+              job={job} 
+              key={`available-job-${job?.id}`}
+              handleNavigate = {() => router.push(`/user/worker/job-details/${job.id}`)}
             />
           ))
         )}
@@ -39,7 +49,7 @@ const NearbyJobs = () => {
   )
 }
 
-export default NearbyJobs
+export default AvailableJob
 
 import { StyleSheet } from "react-native";
 import { COLORS, FONT, SIZES } from "../../../../constants";

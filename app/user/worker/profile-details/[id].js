@@ -15,8 +15,8 @@ const ProfileDetails = () => {
 
     const [loading, setLoading] = useState(false)
 
-    const { dataCollectionRef, object, data, isLoading, error, refetch } = FirestoreDataFetch("employer", id)
-    const { employer_email, employer_location, employer_name} = object
+    const { dataCollectionRef, object, data, isLoading, error, refetch } = FirestoreDataFetch("worker", id)
+    const { worker_email, worker_location, worker_name} = object
 
     // const SignupSchema = Yup.object().shape({
     //   firstName: Yup.string()
@@ -44,12 +44,12 @@ const ProfileDetails = () => {
     const createData = async (values) => {
         try {
             await addDoc(dataCollectionRef, {
-                employer_email: FIREBASE_AUTH.currentUser.email,
+                worker_email: FIREBASE_AUTH.currentUser.email,
                 id: id,
-                employer_name: values.employer_name,
-                employer_location: values.employer_location,
+                worker_name: values.worker_name,
+                worker_location: values.worker_location,
             });
-            router.push('/user/employer/home/home')
+            router.push('/user/worker/home/home')
 
         }catch (error){
             alert('There is an error: ' + error)
@@ -62,11 +62,11 @@ const ProfileDetails = () => {
     // };
 
     const updateData = async (values) => {
-        const employerDoc = doc(FIRESTORE_DB, "employer", values.id);
+        const workerDoc = doc(FIRESTORE_DB, "worker", values.id);
         try {
-            await updateDoc(employerDoc, { 
-                employer_name: values.employer_name,
-                employer_location: values.employer_location
+            await updateDoc(workerDoc, { 
+                worker_name: values.worker_name,
+                worker_location: values.worker_location
             });
 
             alert("Your profile information has been succesfully updated!!!")
@@ -98,9 +98,9 @@ const ProfileDetails = () => {
             <Formik 
                 initialValues={{
                     id: id,
-                    employer_email: employer_email,
-                    employer_name: employer_name,
-                    employer_location: employer_location
+                    worker_email: worker_email,
+                    worker_name: worker_name,
+                    worker_location: worker_location
                 }}
                 // validationSchema={SignupSchema}
                 onSubmit={updateData}
@@ -112,23 +112,23 @@ const ProfileDetails = () => {
                         <TextInput
                             style={styles.input}
                             placeholder='Email'
-                            value={values.employer_email}
-                            onChangeText={handleChange('employer_email')}
+                            value={values.worker_email}
+                            onChangeText={handleChange('worker_email')}
                             editable={false}
                         />
             
                         <TextInput
                             style={styles.input}
                             placeholder='Name'
-                            value={values.employer_name}
-                            onChangeText={handleChange('employer_name')}
+                            value={values.worker_name}
+                            onChangeText={handleChange('worker_name')}
                         />
             
                         <TextInput
                             style={styles.input}
                             placeholder='Location'
-                            value={values.employer_location}
-                            onChangeText={handleChange('employer_location')}
+                            value={values.worker_location}
+                            onChangeText={handleChange('worker_location')}
                         />
                     </View>
             
@@ -148,12 +148,12 @@ const ProfileDetails = () => {
             </Formik>
             
             <View style={styles.signOutBtnContainer}>
-                <TouchableOpacity
-                    onPress={signOut}
-                    style={styles.signOutButton}
-                >
-                    <Text style={styles.buttonText}>SIGN OUT</Text>
-                </TouchableOpacity>
+            <TouchableOpacity
+                onPress={signOut}
+                style={styles.signOutButton}
+            >
+                <Text style={styles.buttonText}>SIGN OUT</Text>
+            </TouchableOpacity>
             </View>
             
         </KeyboardAvoidingView>    
@@ -164,25 +164,9 @@ export default ProfileDetails
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    inputContainer: {
-      width: '80%'
-    },
-    input: {
-      backgroundColor: 'white',
-      paddingHorizontal: 15,
-      paddingVertical: 10,
-      borderRadius: 10,
-      marginTop: 5,
-    },
-    buttonContainer: {
-      width: '50%',
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 40,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     signOutBtnContainer: {
         position: "absolute",
@@ -194,29 +178,29 @@ const styles = StyleSheet.create({
         alignItems: "center",
         flexDirection: "row",
     },
+    inputContainer: {
+        width: '80%'
+    },
+    input: {
+        backgroundColor: 'white',
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        borderRadius: 10,
+        marginTop: 5,
+    },
+    buttonContainer: {
+        width: '50%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 40,
+        },
     button: {
-      backgroundColor: '#FF0000',
-      width: '100%',
-      padding: 10,
-      borderRadius: 10,
-      alignItems: 'center',
-      marginTop: 1
-    },
-    buttonOutline: {
-      backgroundColor: 'white',
-      marginTop: 5,
-      borderColor: '#0782F9',
-      borderWidth: 2,
-    },
-    buttonText: {
-      color: 'white',
-      fontWeight: '700',
-      fontSize: 16,
-    },
-    buttonOutlineText: {
-      color: '#0782F9',
-      fontWeight: '700',
-      fontSize: 16,
+        backgroundColor: '#FF0000',
+        width: '100%',
+        padding: 10,
+        borderRadius: 10,
+        alignItems: 'center',
+        marginTop: 1
     },
     signOutButton: {
         flex: 1,
@@ -228,10 +212,26 @@ const styles = StyleSheet.create({
         marginRight: 16,
         borderRadius: 16,
     },
+    buttonOutline: {
+        backgroundColor: 'white',
+        marginTop: 5,
+        borderColor: '#0782F9',
+        borderWidth: 2,
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: '700',
+        fontSize: 16,
+    },
+    buttonOutlineText: {
+        color: '#0782F9',
+        fontWeight: '700',
+        fontSize: 16,
+    },
     headerTitleStyle:{
-      display:"flex",
-      flex:1,
-      alignSelf:"center",
-      textAlign:"center"
+        display:"flex",
+        flex:1,
+        alignSelf:"center",
+        textAlign:"center"
     },
   })

@@ -1,31 +1,47 @@
 import { Text, View, SafeAreaView, ScrollView, ActivityIndicator, RefreshControl, Touchable, TouchableOpacity } from "react-native";
 import { Stack, useRouter, useSearchParams } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect} from "react";
 
 import { Company, JobFooter, JobTabs, ScreenHeaderBtn, Specifics } from '..'
 import { COLORS, icons, SIZES } from "../../../../constants";
 
 import { FirestoreDataFetch } from "..";
-// import useFetch from '../../../../hook/useFetch'
 
-const tabs = ["About","Qualifications","Responsibilities"]
+const tabs = ["Job","Employer"]
 
 const JobDetails = () => {
 
-    const params = useSearchParams();
+    const { id } = useSearchParams();
     const router = useRouter();
 
-    const { data, isLoading, error, refetch } = FirestoreDataFetch("jobDetail")
+    const { 
+        data: jobData, 
+        object: jobObject, 
+        isLoading: jobIsLoading, 
+        error: jobError, 
+        refetch: jobRefetch
+    } = FirestoreDataFetch("jobDetail", id)
+    
+    const { 
+        data: employerData, 
+        object: employerObject, 
+        isLoading: employerIsLoading, 
+        error: employerError, 
+        refetch: employerRefetch
+    } = FirestoreDataFetch("employer", jobObject.employer_email)
+
     
     const [activeTab, setActiveTab] = useState(tabs[0])
     const [refreshing, setRefreshing] = useState(false);
+    const [isLoading, setIsLoading] = useState(false)
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        refetch();
+        jobRefetch();
+        employerRefetch();
         setRefreshing(false);
     },[])
-
+    
     return (
         <SafeAreaView style={{ flex:1 , backgroundColor: COLORS.lightWhite}}>
             <Stack.Screen 
@@ -41,7 +57,9 @@ const JobDetails = () => {
                         <ScreenHeaderBtn 
                             iconUrl={icons.left}
                             dimension="60%"
-                            handlePress={() => router.back()}
+                            handlePress={() => {
+                                router.back()
+                            }}
                         />
                     ),
                     headerRight: () => (
@@ -53,11 +71,11 @@ const JobDetails = () => {
                 }}
             />
             <ScrollView showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
-                {isLoading ? (
+                {jobIsLoading || employerIsLoading ? (
                     <ActivityIndicator/>
-                ) : error ? (
+                ) : jobError || employerError ? (
                     <Text>Something went wrong</Text>
-                ) : data.length === 0?(
+                ) : (jobData.length === 0 || employerData.length === 0)?(
                     <Text>No data</Text>
                 ) : (
                     <View 
@@ -68,10 +86,10 @@ const JobDetails = () => {
                         }}
                     >
                         <Company 
-                            companyLogo={data[0].employer_logo} 
-                            jobTitle={data[0].job_title}
-                            companyName={data[0].employer_name}
-                            location={data[0].job_country}
+                            companyLogo={jobObject.employer_logo} 
+                            jobTitle={jobObject.job_title}
+                            companyName={jobObject.employer_name}
+                            location={jobObject.job_country}
                         />
 
                         <JobTabs
@@ -81,14 +99,17 @@ const JobDetails = () => {
                         />
 
                         <Specifics
-                            data={data}
+                            employerData={employerData}
+                            employerObject={employerObject}
+                            jobData={jobData}
+                            jobObject={jobObject}
                             activeTab={activeTab}
                         />
                     </View>
                 )}
             </ScrollView>
 
-            <JobFooter url={data[0]?.job_google_link??'https://careers.google.com/jobs/results'}/>
+            <JobFooter jobId={id} jobObject={jobObject} jobRefetch={jobRefetch}/>
         </SafeAreaView>
         
     )

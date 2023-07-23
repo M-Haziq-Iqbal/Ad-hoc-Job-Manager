@@ -1,30 +1,60 @@
 import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { checkImageURL } from '../../../../utils'
+import { useState, useEffect } from 'react'
 
-const NearbyJobCard = ({job, handleNavigate}) => {
+import { FIREBASE_AUTH } from '../../../../firebase'
+
+const AvailableJobCard = ({job, handleNavigate}) => {
+
+  const [hasEmail, setHasEmail] = useState()
+
+  const containsValue = ()=> {
+    if (job.worker_email?.includes(FIREBASE_AUTH.currentUser.email)){
+      (setHasEmail(true))
+    }
+  }
+  
+  useEffect(() => {
+    containsValue();
+  }, [job.worker_email]);
+
+  // console.log(job)
   return (
     <TouchableOpacity 
       style={styles.container}
       onPress={handleNavigate}
     >
-      <TouchableOpacity style={styles.logoContainer}>
-        <Image 
-          source={{ uri: checkImageURL(job.employer_logo) ? job.employer_logo : ('https://img.icons8.com/?size=512&id=6644&format=png') }}
-          resizeMode='contain'
-          style={styles.logoImage}
-        />
-      </TouchableOpacity>
-
+  
+        <TouchableOpacity style={styles.logoContainer}>
+          <Image 
+            source={{ uri: checkImageURL(job.employer_logo) ? job.employer_logo : ('https://w7.pngwing.com/pngs/442/477/png-transparent-computer-icons-user-profile-avatar-profile-heroes-profile-user.png') }}
+            resizeMode='contain'
+            style={styles.logoImage}
+          />
+        </TouchableOpacity>
+      
       <View style={styles.textContainer}>
         <Text style={styles.jobName} numberOfLines={1}>{job.job_title}</Text>
         <Text style={styles.jobType}>{job.job_employment_type}</Text>
       </View>
 
+      {
+        hasEmail&&
+        <TouchableOpacity style={styles.logoContainer}>
+        <Image 
+          source={{ uri: ('https://static.vecteezy.com/system/resources/previews/018/888/319/original/check-mark-icon-png.png') }}
+          resizeMode='contain'
+          style={styles.logoImage}
+        />
+      </TouchableOpacity>
+      }
+
     </TouchableOpacity>
+    
   )
 }
 
-export default NearbyJobCard
+export default AvailableJobCard
 
 //Stylesheet
 

@@ -1,23 +1,16 @@
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native'
 import { Stack, useRouter } from 'expo-router';
 
-import { FIRESTORE_DB } from '../../../firebase';
+import { FIRESTORE_DB, FIREBASE_AUTH } from '../../../firebase';
 import { addDoc, collection } from "firebase/firestore";
+import { FirestoreDataFetch } from '.';
 // import { FirestoreDataCreate } from '..';
 import { Formik } from 'formik';
 import * as Yup from 'yup'
 
-
 const createJob = () => {
 
   const router = useRouter();
-  
-  const data = {
-    job_country: '', 
-    job_description: '', 
-    job_employment_type: '', 
-    job_id: '', 
-    job_title: '',}
 
   // const SignupSchema = Yup.object().shape({
   //   firstName: Yup.string()
@@ -27,16 +20,21 @@ const createJob = () => {
   //   email: Yup.string().email('Invalid email').required('Required'),
   // });
 
+  // const { object } = FirestoreDataFetch("employer", FIREBASE_AUTH.currentUser?.email)
+  // const detail = object[0]
+
   const dataCollectionRef = collection(FIRESTORE_DB, "jobDetail")
 
   const createData = async (values) => {
     try {
         await addDoc(dataCollectionRef, {
-          job_country: values.job_country,
+          employer_email: FIREBASE_AUTH.currentUser.email,
           job_description: values.job_description,
           job_employment_type: values.job_employment_type,
-          job_title: values.job_title
+          job_title: values.job_title,
+          worker_email: []
         });
+        alert('Job posting has been successfully created!!! ')
         router.push('/user/employer/home/home')
 
         // console.log(filteredData)
@@ -53,13 +51,17 @@ const createJob = () => {
         style={styles.headerTitleStyle}
         options={{
             headerShadowVisible: false,
-            headerShown: false,
-            headerTitle: 'LOGIN'
+            headerTitle: 'CREATE NEW JOB'
         }}
       />
 
       <Formik 
-        initialValues={data}
+        initialValues={{
+          job_description: '', 
+          job_employment_type: '', 
+          job_location: '',
+          job_id: '', 
+          job_title: '',}}
         // validationSchema={SignupSchema}
         onSubmit={createData}
       >
@@ -69,8 +71,8 @@ const createJob = () => {
               <TextInput
                 style={styles.input}
                 placeholder='Type'
-                value={values.job_country}
-                onChangeText={handleChange('job_country')}
+                value={values.job_title}
+                onChangeText={handleChange('job_title')}
               />
 
               <TextInput
@@ -83,15 +85,15 @@ const createJob = () => {
               <TextInput
                 style={styles.input}
                 placeholder='Location'
-                value={values.job_employment_type}
-                onChangeText={handleChange('job_employment_type')}
+                value={values.job_location}
+                onChangeText={handleChange('job_location')}
               />
 
               <TextInput
                 style={styles.input}
-                placeholder='Duration'
-                value={values.job_title}
-                onChangeText={handleChange('job_title')}
+                placeholder='Employment Type'
+                value={values.job_employment_type}
+                onChangeText={handleChange('job_employment_type')}
               />
             </View>
 

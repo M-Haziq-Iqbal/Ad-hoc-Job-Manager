@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { FIREBASE_AUTH, FIREBASE_AUTH_GOOGLE } from '../../firebase';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { FirestoreDataFetch } from '../user/employer/index';
 
 const login = () => {
 
@@ -14,12 +15,18 @@ const login = () => {
   const [loading, setLoading] = useState(false);
   const [role, setRole] = useState("")
 
+  // const { object: workerObject } = FirestoreDataFetch("worker", email)
+  const { data } = FirestoreDataFetch("employer")
+
   const signIn = async () => {
     setLoading(true);
+
     try {
       await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
       alert("Sign in successful: ")
-      router.push('/user/employer/home/home')
+
+      const filteredObject = data?.filter((obj) => obj?.employer_email === email)
+      filteredObject.length === 0? router.push('/user/worker/home/home') : router.push('/user/employer/home/home')
     } catch (error) {
       console.log(error);
       alert("Sign in failed: " + error.message)
@@ -93,7 +100,7 @@ const login = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={()=>{router.push('/screen/register')}}
+          onPress={()=>{router.push('/screen/registerRole')}}
           style={[styles.button, styles.buttonOutline]}
         >
             <Text style={styles.buttonOutlineText}>REGISTER</Text>

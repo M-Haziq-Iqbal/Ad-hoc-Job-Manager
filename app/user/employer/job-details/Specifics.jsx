@@ -1,27 +1,27 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 
-const ContentList = ({data, object, activeTab}) => {
+const ContentList = ({object, activeTab}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{activeTab} Details:</Text>
 
       {
-        (activeTab === "Employer") && 
+        (activeTab === "Worker") && 
         <View style={styles.pointsContainer}>
-          <View key={object.employer_name + object?.employer_email} style={styles.pointWrapper}>
+          <View key={"worker_name"} style={styles.pointWrapper}>
             <View style={styles.pointDot}/>
-            <Text style={styles.pointText}> Name: {object.employer_name}</Text>
+            <Text style={styles.pointText}> Name: {object[0]?.worker_name}</Text>
           </View>
 
-          <View key={object.employer_email + object?.employer_email} style={styles.pointWrapper}>
+          <View key={"worker_email"} style={styles.pointWrapper}>
             <View style={styles.pointDot}/>
-            <Text style={styles.pointText}> Email: {object.employer_email}</Text>
+            <Text style={styles.pointText}> Email: {object[0]?.worker_email}</Text>
           </View>
 
-          <View key={object.employer_location + object?.employer_email} style={styles.pointWrapper}>
+          <View key={"worker_location"} style={styles.pointWrapper}>
             <View style={styles.pointDot}/>
-            <Text style={styles.pointText}> Location: {object.employer_location}</Text>
+            <Text style={styles.pointText}> Location: {object[0]?.worker_location}</Text>
           </View>
         </View>
       }
@@ -29,17 +29,17 @@ const ContentList = ({data, object, activeTab}) => {
       {
         (activeTab === "Job") && 
         <View style={styles.pointsContainer}>
-          <View key={object.job_title} style={styles.pointWrapper}>
+          <View key={"job_title"} style={styles.pointWrapper}>
             <View style={styles.pointDot}/>
             <Text style={styles.pointText}> Type: {object?.job_title}</Text>
           </View>
 
-          <View key={object.job_description} style={styles.pointWrapper}>
+          <View key={"job_description"} style={styles.pointWrapper}>
             <View style={styles.pointDot}/>
             <Text style={styles.pointText}> Decription: {object?.job_description}</Text>
           </View>
 
-          <View key={object.job_employment_type} style={styles.pointWrapper}>
+          <View key={"job_employment_type"} style={styles.pointWrapper}>
             <View style={styles.pointDot}/>
             <Text style={styles.pointText}> Employment type: {object?.job_employment_type}</Text>
           </View>
@@ -50,21 +50,19 @@ const ContentList = ({data, object, activeTab}) => {
   )
 }
 
-const Specifics = ({employerData, employerObject, jobData, jobObject, activeTab}) => {
+const Specifics = ({jobObject, workerObject, activeTab}) => {
 
   switch (activeTab) {
-    case "Employer": return (
+    case "Worker": return (
       <ContentList
-        data={employerData}
         activeTab={activeTab}
         // point={object[0].job_description??['N/A']}
-        object={employerObject}
+        object={workerObject}
       />
     )
 
     case "Job": return (
       <ContentList 
-        data={jobData}
         activeTab={activeTab}
         // point={data[0].job_description??['N/A']}
         object={jobObject}

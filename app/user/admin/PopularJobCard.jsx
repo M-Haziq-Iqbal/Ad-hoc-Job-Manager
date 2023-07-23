@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native'
 import { COLORS, FONT, SHADOWS, SIZES } from '../../../constants';
 import { checkImageURL } from '../../../utils';
 
-const PopularJobCard = ({ item, handlePress, selectedJob }) => {
+const PopularJobCard = ({ selectedJob, handlePress, item }) => {
   return (
     <TouchableOpacity 
       style={styles.container(selectedJob, item)}

@@ -5,6 +5,19 @@
       "bundler": "metro"
     },
     "name": "FYP-test-job",
-    "slug": "FYP-test-job"
+    "slug": "FYP-test-job",
+    "extra": {
+      "eas": {
+        "projectId": "4fa2a3b0-b231-415f-a7c2-85e18fe08937"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/4fa2a3b0-b231-415f-a7c2-85e18fe08937"
+    },
+    "android": {},
+    "ios": {}
   }
 }

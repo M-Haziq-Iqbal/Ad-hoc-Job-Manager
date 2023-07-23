@@ -9,7 +9,7 @@ import PostedJob from "./home/PostedJob";
 // import Company from "./worker/job-details/Company";
 // import { default as JobTabs } from "./worker/job-details/Tabs";
 // import { default as JobFooter } from "./worker/job-details/Footer";
-// import Specifics from "./worker/job-details/Specifics";
+import Specifics from "./job-details/Specifics";
 
 // card
 import WorkerCard from "./job-details/WorkerCard";
@@ -29,8 +29,7 @@ export {
   PostedJob,
   // Company,
   // JobTabs,
-  // JobFooter,
-  // Specifics,
+  Specifics,
   WorkerCard,
   PostedJobCard,
   Footer,

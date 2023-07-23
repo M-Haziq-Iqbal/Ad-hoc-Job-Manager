@@ -1,13 +1,15 @@
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
 import { useRouter, useState } from 'expo-router'
 import { FirestoreDataFetch } from '..'
+import { FIREBASE_AUTH } from '../../../../firebase'
 import PostedJobCard  from './PostedJobCard'
 
 const PostedJob = () => {
 
   const router = useRouter();
-  
-  const { data, isLoading, error } = FirestoreDataFetch("jobDetail")
+
+  const { objectArray, isLoading, error } = FirestoreDataFetch("jobDetail", FIREBASE_AUTH.currentUser?.email)
+  // console.log(objectArray)
 
   return (
     <View style={styles.container}>
@@ -24,10 +26,10 @@ const PostedJob = () => {
         ) : error ? (
           <Text>Something went wrong</Text>
         ) : (
-          data?.map((job) => (
+          objectArray?.map((job) => (
             <PostedJobCard 
               job={job} 
-              key={`posted-job-${job?.job_id}`}
+              key={`posted-job-${job?.worker_email}`}
               handleNavigate = {() => router.push(`/user/employer/job-details/${job.id}`)}
             />
           ))

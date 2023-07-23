@@ -8,26 +8,15 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { Formik } from 'formik';
 
-const register = () => {
+const registerWorker = () => {
 
-  const router = useRouter();
-  
-  const dataCollectionRef = collection(FIRESTORE_DB, "employer")
+   const router = useRouter();
+   
+   const dataCollectionRef = collection(FIRESTORE_DB, "worker")
 
-  const [loading, setLoading] = useState(false);
+   const [loading, setLoading] = useState(false);
 
-  // const updateData = async () => {
-  //   const employerDoc = doc(FIRESTORE_DB, "user", "Dobpc1WjOihdEBnKjTFX");
-  //   try {
-  //       await updateDoc(employerDoc, { 
-  //           employer: values.employer_name,
-  //       });
-
-  //       alert("Your profile information has been succesfully updated!!!")
-  //   } catch (error) {
-  //       alert('There is an error: ' + error)
-  //   }
-  // };
+  //  const auth = FIREBASE_AUTH;
 
   const createData = async (values) => {
     setLoading(true);
@@ -39,13 +28,11 @@ const register = () => {
       ) {
 
         await createUserWithEmailAndPassword(FIREBASE_AUTH, values.email, values.password)
-        alert("Registration is successful")
+        alert("Register successful: ")
 
         await addDoc(dataCollectionRef, {
-          employer_email: FIREBASE_AUTH.currentUser.email,
+          worker_email: FIREBASE_AUTH.currentUser.email,
         });
-
-        // updateData();
           
         FIREBASE_AUTH.signOut()
         router.push('/screen/login')
@@ -59,6 +46,29 @@ const register = () => {
     }
   }
 
+  // const signUp = async () => {
+  //   setLoading(true);
+  //   try {
+  //       if (
+  //         !email? alert("Please fill the email ")
+  //         : !password? alert ("Please fill the password ")
+  //         // : !selectedRole? alert("Please select role ")
+  //         : true
+  //       ) {
+  //         await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password)
+  //         alert("Register successful: ")
+          
+  //         FIREBASE_AUTH.signOut()
+  //         router.push('/screen/login')
+  //       }   
+  //   } catch (error) {
+  //       console.log(error);
+  //       alert("Register failed: " + error.message)
+  //   } finally {
+  //       setLoading(false)
+  //   }
+  // }
+
   return (
     <KeyboardAvoidingView style={styles.container}>
 
@@ -66,7 +76,7 @@ const register = () => {
         style={styles.headerTitleStyle}
         options={{
             headerShadowVisible: false,
-            headerTitle: 'REGISTER AS EMPLOYER'
+            headerTitle: 'REGISTER AS WORKER'
         }}
       />
 
@@ -95,18 +105,6 @@ const register = () => {
                   secureTextEntry
               />
               </View>
-
-              {/* <Picker
-                selectedValue={selectedRole}
-                onValueChange={(itemValue, itemIndex) =>
-                  setSelectedRole(itemValue)
-                }
-                mode='dropdown'
-              >
-                <Picker.Item label="Role" value="" style={{color:'#808080'}}/>
-                <Picker.Item label="Manager" value="manager" />
-                <Picker.Item label="Worker" value="worker" />
-              </Picker> */}
   
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
@@ -120,17 +118,11 @@ const register = () => {
           )}
   
       </Formik>
-
-      {/* <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={()=>{router.back()}}>
-            <Text>Back</Text>
-        </TouchableOpacity>
-      </View> */}
     </KeyboardAvoidingView>    
   )
 }
 
-export default register
+export default registerWorker
 
 const styles = StyleSheet.create({
   container: {
