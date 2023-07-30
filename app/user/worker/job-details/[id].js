@@ -14,16 +14,16 @@ const JobDetails = () => {
     const { id } = useSearchParams();
     const router = useRouter();
 
+    //fetch jobDetails collection that has ID of the current page's param
     const { 
-        data: jobData, 
         object: jobObject, 
         isLoading: jobIsLoading, 
         error: jobError, 
         refetch: jobRefetch
     } = FirestoreDataFetch("jobDetail", id)
     
+    //fetch employer collection that has employer email from current jobDetails collection
     const { 
-        data: employerData, 
         object: employerObject, 
         isLoading: employerIsLoading, 
         error: employerError, 
@@ -33,7 +33,6 @@ const JobDetails = () => {
     
     const [activeTab, setActiveTab] = useState(tabs[0])
     const [refreshing, setRefreshing] = useState(false);
-    const [isLoading, setIsLoading] = useState(false)
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
@@ -51,7 +50,6 @@ const JobDetails = () => {
                         headerShadowVisible: false,
                         headerBackVisible: false,
                     },
-                    // headerTitle: `${data[0]?.job_title??[""]}`
                     headerTitle: "JOB DETAILS",
                     headerLeft: () => (
                         <ScreenHeaderBtn 
@@ -75,7 +73,7 @@ const JobDetails = () => {
                     <ActivityIndicator/>
                 ) : jobError || employerError ? (
                     <Text>Something went wrong</Text>
-                ) : (jobData.length === 0 || employerData.length === 0)?(
+                ) : (jobObject.length === 0 || employerObject.length === 0)?(
                     <Text>No data</Text>
                 ) : (
                     <View 
@@ -99,9 +97,7 @@ const JobDetails = () => {
                         />
 
                         <Specifics
-                            employerData={employerData}
                             employerObject={employerObject}
-                            jobData={jobData}
                             jobObject={jobObject}
                             activeTab={activeTab}
                         />

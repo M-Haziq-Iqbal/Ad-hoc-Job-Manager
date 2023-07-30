@@ -4,35 +4,37 @@ import { useState, useEffect } from 'react'
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../../../firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 
-const Footer = ({jobId, jobObject, workerData, jobRefetch}) => {
+const Footer = ({jobId, jobObject, jobRefetch, activeTab, currentEmail}) => {
   
   const [hasEmail, setHasEmail] = useState()
 
-  const currentEmail = FIREBASE_AUTH.currentUser.email
+  const email = FIREBASE_AUTH.currentUser.email
+
+  const jobWorkerEmail = jobObject.worker_email
 
   const containsValue = ()=> {
-    if (jobObject.worker_email?.includes(currentEmail)){
+    if (jobObject.worker_email?.includes(email)){
       (setHasEmail(true))
     } else (setHasEmail(false))
   }
 
   const jobDoc = doc(FIRESTORE_DB, "jobDetail", jobId);
   
-  const deleteData = async () => {
+  // const deleteData = async () => {
 
-    const filteredEmailArray = (jobObject.worker_email).filter( item => item !== currentEmail)
+  //   const filteredEmailArray = (jobObject.worker_email).filter( item => item !== email)
     
-    try {
-        await updateDoc(jobDoc, { 
-          worker_email: filteredEmailArray
-        });
-        jobRefetch();
-        containsValue();
-        alert("Your job withdrawal is successful!")
-    } catch (error) {
-        alert('There is an error: ' + error)
-    }
-  };
+  //   try {
+  //       await updateDoc(jobDoc, { 
+  //         worker_email: filteredEmailArray
+  //       });
+  //       jobRefetch();
+  //       containsValue();
+  //       alert("Your job withdrawal is successful!")
+  //   } catch (error) {
+  //       alert('There is an error: ' + error)
+  //   }
+  // };
 
   const updateData = async () => {
     try {
@@ -52,7 +54,7 @@ const Footer = ({jobId, jobObject, workerData, jobRefetch}) => {
   }, [jobObject.worker_email]);
 
   // console.log("hasEmail: " + hasEmail)
-  // console.log(jobObject.worker_email)
+  // console.log(jobWorkerEmail)
   // console.log(jobObject.worker_email?.includes(FIREBASE_AUTH.currentUser.email))
 
   return (
@@ -66,24 +68,26 @@ const Footer = ({jobId, jobObject, workerData, jobRefetch}) => {
       </TouchableOpacity> */}
 
       {
-        hasEmail?
+        (activeTab === "Job") &&
         <TouchableOpacity 
-          onPress={deleteData} 
+          // onPress={deleteData} 
           style={styles.withdrawBtn}
         >
           <Text style={styles.withdrawBtnText}>
-            REJECT
+            WITHDRAW
           </Text>
         </TouchableOpacity>
-      :
-       <TouchableOpacity 
-          onPress={updateData} 
-          style={styles.applyBtn}
-        >
-          <Text style={styles.applyBtnText}>
-            HIRE
-          </Text>
-        </TouchableOpacity>
+      }
+      {
+        jobWorkerEmail?.length > 0 && (activeTab === "Worker") && currentEmail &&
+        <TouchableOpacity 
+        // onPress={updateData} 
+        style={styles.applyBtn}
+      >
+        <Text style={styles.applyBtnText}>
+          HIRE
+        </Text>
+      </TouchableOpacity>
       }
     </View>
   )

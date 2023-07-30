@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { View, ScrollView, SafeAreaView, TouchableOpacity, Text } from 'react-native';
+import React, { useState } from 'react';
+import { View, ScrollView, SafeAreaView, TouchableOpacity, Text, RefreshControl } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { images } from '../../../../constants';
 
@@ -16,6 +16,7 @@ const Home = () => {
 
     const router = useRouter();
     
+    const [refreshing, setRefreshing] = React.useState(false);
     const [searchTerm, setSearchTerm] = useState("")
     const [loading, setLoading] = useState(false)
 
@@ -25,6 +26,13 @@ const Home = () => {
             router.push(`/search/${searchTerm}`)
         }
     }
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+          setRefreshing(false);
+        }, 2000);
+      }, []);
 
     const signOut = async () => {
         setLoading(true);
@@ -68,7 +76,10 @@ const Home = () => {
                     headerTitle: 'HOME'
                 }}
             />
-            <ScrollView>
+            <ScrollView 
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }>
                 <View
                     style={{
                         flex:1,

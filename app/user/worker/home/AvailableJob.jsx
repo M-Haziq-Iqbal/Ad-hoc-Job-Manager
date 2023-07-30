@@ -39,7 +39,7 @@ const AvailableJob = () => {
           data?.map((job) => (
             <AvailableJobCard 
               job={job} 
-              key={`available-job-${job?.id}`}
+              key={`available-job-${job?.id + job?.title}`}
               handleNavigate = {() => router.push(`/user/worker/job-details/${job.id}`)}
             />
           ))

@@ -1,15 +1,24 @@
+import { useEffect } from 'react'
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
 import { useRouter, useState } from 'expo-router'
 import { FirestoreDataFetch } from '..'
 import { FIREBASE_AUTH } from '../../../../firebase'
 import PostedJobCard  from './PostedJobCard'
+import { useIsFocused } from '@react-navigation/native'
 
 const PostedJob = () => {
 
   const router = useRouter();
+  const isFocused = useIsFocused();
 
-  const { objectArray, isLoading, error } = FirestoreDataFetch("jobDetail", FIREBASE_AUTH.currentUser?.email)
-  // console.log(objectArray)
+  const { objectArray, isLoading, error, refetch } = FirestoreDataFetch("jobDetail", FIREBASE_AUTH.currentUser?.email)
+
+  //refetch jobDetail data after redirect from another page
+  useEffect(() => {
+    if(isFocused){
+      refetch();
+    }
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>
@@ -27,9 +36,9 @@ const PostedJob = () => {
           <Text>Something went wrong</Text>
         ) : (
           objectArray?.map((job) => (
-            <PostedJobCard 
+            <PostedJobCard
               job={job} 
-              key={`posted-job-${job?.worker_email}`}
+              key={`posted-job-${job?.id}`}
               handleNavigate = {() => router.push(`/user/employer/job-details/${job.id}`)}
             />
           ))

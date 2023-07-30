@@ -8,7 +8,9 @@ const AvailableJobCard = ({job, handleNavigate}) => {
 
   const [hasEmail, setHasEmail] = useState()
 
+  //job is single document from jobDetail collection
   const containsValue = ()=> {
+    //check whether current job has current worker email in the document
     if (job.worker_email?.includes(FIREBASE_AUTH.currentUser.email)){
       (setHasEmail(true))
     }

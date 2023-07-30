@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { View, ScrollView, SafeAreaView, Pressable, Text } from 'react-native';
+import React, { useState } from 'react';
+import { View, ScrollView, SafeAreaView, Pressable, Text, RefreshControl } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
+import { checkImageURL } from '../../../../utils';
 
 import { COLORS, icons, images, SIZES } from '../../../../constants';
 import { AvailableJob, ScreenHeaderBtn, Welcome } from '..';
@@ -15,6 +16,7 @@ const Home = () => {
 
     const router = useRouter();
 
+    const [refreshing, setRefreshing] = React.useState(false);
     const [searchTerm, setSearchTerm] = useState("")
     const [loading, setLoading] = useState(false)
 
@@ -25,8 +27,18 @@ const Home = () => {
         }
     }
 
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+          setRefreshing(false);
+        }, 2000);
+      }, []);
+
     return(
-        <SafeAreaView style={{flex: 1 ,backgroundColor: COLORS.lightWhite}}>
+        <SafeAreaView 
+            style={{flex: 1 ,backgroundColor: COLORS.lightWhite}}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
+        }>
             <Stack.Screen 
                 options={{
                     headerStyle: {

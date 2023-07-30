@@ -1,51 +1,13 @@
-import { useState, useEffect } from 'react'
+import { memo } from 'react'
 import { useRouter } from 'expo-router'
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native'
 
 //MAKE SURE TO IMPORT FRAGMENT PROPERLY IN BRACKET!!!
-import { WorkerCard } from '../index'
+import { WorkerCard } from '..'
 
-const Worker = ({data, emailArray, isLoading, error, setSelectedWorker}) => {
+const Worker = ({setCurrentEmail, currentEmail, emailArray}) => {
 
   const router = useRouter();
-  const [selectedJob, setSelectedJob] = useState([])
-  const [currentEmail, setCurrentEmail] = useState([])
-  const [currentWorker, setCurrentWorker] = useState()
-
-  // reroute to #item.job_id page (<PopularJobCard/>)
-  const handlePress = (email) => {
-    setCurrentEmail(email)
-  }
-
-  // Function to find the object that has the specific email in the 'worker_email' array
-  function findObjectByWorkerEmail(currentEmail) {
-    return data.find(obj => obj.worker_email.includes(currentEmail));
-  }
-
-  async function findObjectByWorkerEmailAsync(currentEmail) {
-    const foundObject = findObjectByWorkerEmail(currentEmail);
-    if (foundObject) {
-      return foundObject;
-    } else {
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Add a delay before the next iteration
-      return findObjectByWorkerEmailAsync(currentEmail); // Recursive call to try again
-    }
-  }
-
-  findObjectByWorkerEmailAsync(currentEmail)
-  .then(foundObject => {
-    // console.log("Found Object:", foundObject);
-    setCurrentWorker(foundObject)
-  })
-  .catch(error => {
-    console.error("Error occurred:", error);
-  });
-
-  // useEffect(() => {
-  //   handlePress(emailArray);
-  // }, []);
-
-  // console.log("emailArray: ", emailArray)
   
   return (
     <View style={styles.container}>
@@ -57,32 +19,33 @@ const Worker = ({data, emailArray, isLoading, error, setSelectedWorker}) => {
       </View>
 
       <View style={styles.cardsContainer}>
-        {isLoading ? (
-          <ActivityIndicator size={"large"} color={COLORS.primary}/>
-        ) : error ? (
-          <Text>Something went wrong</Text>
-        ) : (
+        {
+          (emailArray.length === 0) &&
+          <Text> Sorry, there is no worker applying yet</Text>
+        }
+        {
+          emailArray &&
           <FlatList
             data={emailArray}
             renderItem={({item})=>( //each email
               <WorkerCard 
                 email={item} //each email
-                handlePress={handlePress}
-                currentWorker={currentWorker}
+                setCurrentEmail={setCurrentEmail}
+                currentEmail={currentEmail}
               />
               // <Text>{item.job_id}</Text>
             )}
             horizontal
-            keyExtractor={item => item.job_id}
+            keyExtractor={item => item + Date.now().toString()}
             contentContainerStyle = {{columnGap: SIZES.medium}}
           />
-        )}
+        }
       </View>
     </View>
   )
 }
 
-export default Worker
+export default memo(Worker)
 
 //Stylesheet
 import { StyleSheet } from 'react-native'

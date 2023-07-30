@@ -106,13 +106,13 @@ const login = () => {
             <Text style={styles.buttonOutlineText}>REGISTER</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={()=>enter("worker")}>
+        {/* <TouchableOpacity onPress={()=>enter("worker")}>
             <Text>Worker</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={()=>enter("employer")}>
             <Text>Employer</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </KeyboardAvoidingView>    
   )

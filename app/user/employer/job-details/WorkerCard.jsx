@@ -1,17 +1,21 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native'
 import { COLORS, FONT, SHADOWS, SIZES } from '../../../../constants';
 import { checkImageURL } from '../../../../utils';
+import { FirestoreDataFetch } from '..';
 
-const WorkerCard = ({email, handlePress, currentWorker}) => {
+const WorkerCard = ({email, currentEmail, setCurrentEmail }) => {
 
-  console.log("currentWorker: ",currentWorker)
+  const { 
+    object: currentWorker, 
+  } = FirestoreDataFetch("worker", email)
+
   return (
     
     <TouchableOpacity 
-      style={styles.container(email, currentWorker)}
-      onPress={()=>handlePress(email)}
+      style={styles.container(email, currentEmail)}
+      onPress={()=>setCurrentEmail(email)}
     >
-      <TouchableOpacity style={styles.logoContainer(email, currentWorker)}>
+      <TouchableOpacity style={styles.logoContainer(email, currentEmail)}>
         <Image 
           source={{ uri: checkImageURL(currentWorker?.worker_logo) ? currentWorker?.worker_logo : ('https://www.vhv.rs/dpng/d/256-2569650_men-profile-icon-png-image-free-download-searchpng.png') }}
           resizeMode='contain'
@@ -19,11 +23,10 @@ const WorkerCard = ({email, handlePress, currentWorker}) => {
         />
       </TouchableOpacity>
       
-
       <Text style={styles.companyName} >{currentWorker?.worker_name}</Text>
 
       <View style={styles.infoContainer}>
-        <Text style={styles.jobName(email, currentWorker)}>{currentWorker?.worker_email}</Text>
+        <Text style={styles.jobName(email, currentEmail)}>{currentWorker?.worker_email}</Text>
         {/* <Text style={styles.location} numberOfLines={1}>{item.job_country}</Text> */}
       </View>
     </TouchableOpacity>
@@ -33,20 +36,20 @@ const WorkerCard = ({email, handlePress, currentWorker}) => {
 export default WorkerCard
 
 const styles = StyleSheet.create({
-  container: (email, currentWorker) => ({
-    width: 150,
-    padding: SIZES.xLarge,
-    backgroundColor: email === currentWorker?.worker_email ? COLORS.primary : "#FFF",
+  container: (email, currentEmail) => ({
+    width: 130,
+    padding: SIZES.small,
+    backgroundColor: email === currentEmail ? COLORS.primary : "#FFF",
     borderRadius: SIZES.medium,
     justifyContent: "space-between",
     alignItems: "center",
     ...SHADOWS.medium,
     shadowColor: COLORS.white,
   }),
-  logoContainer: (email, currentWorker) => ({
+  logoContainer: (email, currentEmail) => ({
     width: 50,
     height: 50,
-    backgroundColor: email === currentWorker?.worker_email ? "#FFF" : COLORS.white,
+    backgroundColor: email === currentEmail ? "#FFF" : COLORS.white,
     borderRadius: SIZES.medium,
     justifyContent: "center",
     alignItems: "center",
@@ -64,10 +67,10 @@ const styles = StyleSheet.create({
   infoContainer: {
     marginTop: SIZES.small,
   },
-  jobName: (email, currentWorker) => ({
+  jobName: (email, currentEmail) => ({
     fontSize: SIZES.small,
     fontFamily: FONT.medium,
-    color: email === currentWorker?.worker_email ? COLORS.white : COLORS.primary,
+    color: email === currentEmail ? COLORS.white : COLORS.primary,
   }),
   infoWrapper: {
     flexDirection: "row",
@@ -78,7 +81,7 @@ const styles = StyleSheet.create({
   publisher: (email) => ({
     fontSize: SIZES.medium - 2,
     fontFamily: FONT.bold,
-    color: email === currentWorker?.worker_email ? COLORS.white : COLORS.primary,
+    color: email === currentEmail ? COLORS.white : COLORS.primary,
   }),
   location: {
     fontSize: SIZES.medium - 2,

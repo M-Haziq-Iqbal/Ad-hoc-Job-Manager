@@ -21,13 +21,10 @@ const firestoreFetch = (endpoint, query) => {
          const snapshot = await getDocs(dataCollectionRef);
          const filteredData = snapshot?.docs.map((doc)=>({...doc.data(), id: doc.id }))
          setData(filteredData);
-
          
          const filteredObject = filteredData?.filter((obj) => obj?.employer_email === query || obj?.worker_email === query || obj?.id === query)
          setObjectArray(filteredObject);
-     
 
-         
          const extractObject = filteredObject[0] //cannot access property from nested data structure e.g. object[0].id directly
          setObject(extractObject);
          
@@ -50,7 +47,7 @@ const firestoreFetch = (endpoint, query) => {
       fetchData();
    }
    
-   return { dataCollectionRef, data, object,objectArray, isLoading, error, refetch };
+   return { dataCollectionRef, data, object, objectArray, isLoading, error, refetch };
 }
 
 export default firestoreFetch;

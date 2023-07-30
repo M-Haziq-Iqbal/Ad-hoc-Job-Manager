@@ -1,27 +1,36 @@
 import React from 'react'
 import { View, Text } from 'react-native'
+import { FirestoreDataFetch } from '..'
 
-const ContentList = ({object, activeTab}) => {
+const ContentList = ({object, activeTab, currentEmail}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{activeTab} Details:</Text>
+      {
+        (activeTab === "Worker") && !currentEmail &&
+        <View style={styles.pointsContainer}>
+          <View style={styles.pointWrapper}>
+            <Text style={styles.pointText}> Please select any worker to view more details</Text>
+          </View>
+        </View>
+      }
 
       {
-        (activeTab === "Worker") && 
+        (activeTab === "Worker") && currentEmail &&
         <View style={styles.pointsContainer}>
           <View key={"worker_name"} style={styles.pointWrapper}>
             <View style={styles.pointDot}/>
-            <Text style={styles.pointText}> Name: {object[0]?.worker_name}</Text>
+            <Text style={styles.pointText}> Name: {object?.worker_name}</Text>
           </View>
 
           <View key={"worker_email"} style={styles.pointWrapper}>
             <View style={styles.pointDot}/>
-            <Text style={styles.pointText}> Email: {object[0]?.worker_email}</Text>
+            <Text style={styles.pointText}> Email: {object?.worker_email}</Text>
           </View>
 
           <View key={"worker_location"} style={styles.pointWrapper}>
             <View style={styles.pointDot}/>
-            <Text style={styles.pointText}> Location: {object[0]?.worker_location}</Text>
+            <Text style={styles.pointText}> Location: {object?.worker_location}</Text>
           </View>
         </View>
       }
@@ -50,13 +59,21 @@ const ContentList = ({object, activeTab}) => {
   )
 }
 
-const Specifics = ({jobObject, workerObject, activeTab}) => {
+const Specifics = ({currentEmail, jobObject, activeTab}) => {
+
+  const { 
+    data: workerData, 
+    object: workerObject, 
+    isLoading: workerIsLoading, 
+    error: workerError, 
+    refetch: workerRefetch
+  } = FirestoreDataFetch("worker", currentEmail)
 
   switch (activeTab) {
     case "Worker": return (
       <ContentList
+        currentEmail={currentEmail}
         activeTab={activeTab}
-        // point={object[0].job_description??['N/A']}
         object={workerObject}
       />
     )
@@ -64,7 +81,6 @@ const Specifics = ({jobObject, workerObject, activeTab}) => {
     case "Job": return (
       <ContentList 
         activeTab={activeTab}
-        // point={data[0].job_description??['N/A']}
         object={jobObject}
       />
     )

@@ -1,7 +1,9 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 
-const ContentList = ({data, object, activeTab}) => {
+// object: single document of jobDetail collection that has corresponding ID
+// object: single document of employer collection that has corresponding employer email as jobDetail
+const ContentList = ({ object, activeTab}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{activeTab} Details:</Text>
@@ -50,23 +52,19 @@ const ContentList = ({data, object, activeTab}) => {
   )
 }
 
-const Specifics = ({employerData, employerObject, jobData, jobObject, activeTab}) => {
+const Specifics = ({ employerObject, jobObject, activeTab}) => {
 
   switch (activeTab) {
     case "Employer": return (
       <ContentList
-        data={employerData}
         activeTab={activeTab}
-        // point={object[0].job_description??['N/A']}
         object={employerObject}
       />
     )
 
     case "Job": return (
       <ContentList 
-        data={jobData}
         activeTab={activeTab}
-        // point={data[0].job_description??['N/A']}
         object={jobObject}
       />
     )
